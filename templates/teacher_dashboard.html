@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المعلم</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Cairo', sans-serif; }</style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <!-- Top Navbar -->
+    <nav class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-xs">
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-slate-800 text-lg">بوابة المعلم التفاعلية</span>
+            <span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">m.{{username}}</span>
+        </div>
+        <a href="{% url 'logout' %}" class="text-rose-600 text-sm font-semibold flex items-center gap-1 hover:text-rose-700">
+            تسجيل الخروج
+        </a>
+    </nav>
+
+    <!-- Main Content Container -->
+    <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Right Column: CSV & QR Code Tools -->
+        <div class="lg:col-span-1 space-y-6">
+            
+            <!-- Tool 1: CSV Upload -->
+            <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-100">
+                <h2 class="text-md font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    رصد الدرجات الذكي (CSV)
+                </h2>
+                <form method="POST" enctype="multipart/form-data" action="#" class="space-y-4">
+                    <div class="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center cursor-pointer hover:border-indigo-400 transition-colors">
+                        <input type="file" name="csv_file" accept=".csv" class="hidden" id="csvFile">
+                        <label for="csvFile" class="cursor-pointer text-sm text-slate-500">
+                            <span class="block font-semibold text-indigo-600 mb-1">اضغط لرفع ملف الدرجات</span>
+                            صيغة المسموح بها .csv فقط
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-semibold text-sm transition-colors">
+                        رفع وتحديث قاعدة البيانات
+                    </button>
+                </form>
+            </div>
+
+            <!-- Tool 2: QR Scanner Interface -->
+            <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-100">
+                <h2 class="text-md font-bold text-slate-800 mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-16v3m0 0h.01M12 12h.01M16 20h.01M21 12h.01M12 16h.01M4 12h.01M4 16h.01M4 20h.01M20 4h.01M16 4h.01M4 4h.01M16 8h.01M4 8h.01M8 4h.01M8 12h.01M8 16h.01M8 20h.01M16 12h.01M12 20h.01"/></svg>
+                    تسجيل الحضور الفوري (QR)
+                </h2>
+                <p class="text-xs text-slate-500 mb-4">افتح الكاميرا لتسجيل حضور الطلاب تلقائياً بمجرد مسح كود الطالب</p>
+                <!-- Camera Box Simulator -->
+                <div class="bg-slate-900 rounded-xl aspect-square flex flex-col items-center justify-center relative overflow-hidden group">
+                    <div class="absolute inset-4 border-2 border-emerald-400 opacity-60 rounded-lg animate-pulse"></div>
+                    <span class="text-emerald-400 font-mono text-xs z-10">جاري البحث عن كود QR...</span>
+                </div>
+                <button class="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-semibold text-sm transition-colors">
+                    تشغيل كاميرا المسح
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Left Column: Weekly Schedule -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-xs border border-slate-100">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-lg font-bold text-slate-800">جدول الحصص الأسبوعي</h2>
+                    <button class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition-colors">
+                        تحميل الجدول PDF
+                    </button>
+                </div>
+                <!-- Table View -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-600 border-b border-slate-100">
+                                <th class="p-4 rounded-r-xl">اليوم</th>
+                                <th class="p-4">الحصة الأولى</th>
+                                <th class="p-4">الحصة الثانية</th>
+                                <th class="p-4">الحصة الثالثة</th>
+                                <th class="p-4 rounded-l-xl">الصف</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="p-4 font-bold text-slate-700">الأحد</td>
+                                <td class="p-4 text-slate-600">الرياضيات</td>
+                                <td class="p-4 text-slate-600">-</td>
+                                <td class="p-4 text-slate-600">الفيزياء</td>
+                                <td class="p-4"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs">أولى أول</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50/80">
+                                <td class="p-4 font-bold text-slate-700">الإثنين</td>
+                                <td class="p-4 text-slate-600">-</td>
+                                <td class="p-4 text-slate-600">الرياضيات</td>
+                                <td class="p-4 text-slate-600">الفيزياء</td>
+                                <td class="p-4"><span class="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-xs">أولى ثانٍ</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
